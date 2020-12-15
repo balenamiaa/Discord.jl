@@ -109,12 +109,13 @@ mutable struct Client
 
     function Client(
         token::String;
+        userbot::Bool=false,
         prefix::StringOrChar="",
         presence::Union{Dict, NamedTuple}=Dict(),
         strategies::Dict{DataType, <:CacheStrategy}=Dict{DataType, CacheStrategy}(),
         version::Int=API_VERSION,
     )
-        token = startswith(token, "Bot ") ? token : "Bot $token"
+        !userbot && (token = startswith(token, "Bot ") ? token : "Bot $token")
         state = State(merge(DEFAULT_STRATEGIES, strategies))
         conn = Conn(nothing, 0)
         prefix = string(prefix)
