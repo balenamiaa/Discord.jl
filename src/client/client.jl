@@ -106,7 +106,8 @@ mutable struct Client
     p_global::String       # Default command prefix.
     p_guilds::Dict{Snowflake, String}  # Command prefix overrides.
     handlers::Dict{Type{<:AbstractEvent}, Dict{Symbol, AbstractHandler}}  # Event handlers.
-
+    user_agent::String
+    
     function Client(
         token::String;
         userbot::Bool=false,
@@ -114,6 +115,7 @@ mutable struct Client
         presence::Union{Dict, NamedTuple}=Dict(),
         strategies::Dict{DataType, <:CacheStrategy}=Dict{DataType, CacheStrategy}(),
         version::Int=API_VERSION,
+        user_agent::Nullable{String}=nothing
     )
         !userbot && (token = startswith(token, "Bot ") ? token : "Bot $token")
         state = State(merge(DEFAULT_STRATEGIES, strategies))
@@ -144,6 +146,7 @@ mutable struct Client
             prefix,       # p_global
             Dict(),       # p_guilds
             Dict(),       # handlers
+            user_agent == nothing ? "Discord.jl $DISCORD_JL_VERSION" : user_agent
         )
 
         add_handler!(c, Defaults; tag=DEFAULT_HANDLER_TAG, priority=typemax(Int) - 10)
