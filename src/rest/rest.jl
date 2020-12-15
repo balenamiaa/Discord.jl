@@ -171,7 +171,7 @@ function Response{T}(
         url = "$DISCORD_API/v$(c.version)$endpoint"
         isempty(kwargs) || (url *= "?" * HTTP.escapeuri(kwargs))
         headers = merge(Dict(
-            "User-Agent" => "Discord.jl $DISCORD_JL_VERSION",
+            "User-Agent" => c.user_agent,
             "Content-Type" => "application/json",
             "Authorization" => c.token,
         ), Dict(headers))
